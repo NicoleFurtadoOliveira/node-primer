@@ -1,0 +1,13 @@
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+
+  function send() {
+    socket.emit('message', { text: document.getElementById('text').value});
+    document.getElementById('text').value = '';
+  }
+</script>
+
+<h1>Hello Chat</h1>
+<input type="text" id="text" />
+<input type="submit" onclick="send()">
