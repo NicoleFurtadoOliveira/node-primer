@@ -1,13 +1,69 @@
+<script
+  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+  crossorigin="anonymous"></script>
+
 <script src="/socket.io/socket.io.js"></script>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    padding: 16px;
+  }
+  
+  #form {
+    position: absolute;
+    bottom:0;
+    right:0;
+    left:0;
+    display: flex;
+  }
+
+  #form input {
+    height: 50px;
+    font-size: 32px;
+    flex-grow: 2;
+  }
+
+  #form button {
+    flex-basis: 100px;
+    height: 50px;
+  }
+
+  #messages {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  #messages .me {
+    font-weight: bold;
+  }
+</style>
+
+<h1>Hello Chat</h1>
+<form id="form">
+  <input type="text" id="text" />
+  <button>send</button>
+</form>
+
+<ul id="messages">
+</ul>
+
 <script>
   var socket = io();
 
-  function send() {
-    socket.emit('message', { text: document.getElementById('text').value});
-    document.getElementById('text').value = '';
-  }
-</script>
+  socket.on('message', function(data) {
+    var cls = socket.id === data.from ? 'me' : 'others';
+    $('#messages').append('<li class="' + cls + '">' + data.from + ': ' + data.text);
+  });
 
-<h1>Hello Chat</h1>
-<input type="text" id="text" />
-<input type="submit" onclick="send()">
+  $('#form').submit(function() {
+    socket.emit('message', { text: $('#text').val()});
+    $('#text').val('');
+    return false;
+  });
+</script>
