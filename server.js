@@ -12,5 +12,6 @@ io.on('connection', (socket) => {
   socket.emit('connected', { timestamp: new Date() });
   socket.on('message', (data) => {
     console.log(`< ${socket.id}: ${data.text}`);
+    io.emit('message', { text: data.text, from: socket.id });
   });
 });
